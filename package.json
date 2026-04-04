@@ -1,7 +1,7 @@
 {
 	"name": "dep-charge",
 	"private": true,
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
@@ -26,9 +26,11 @@
 	},
 	"dependencies": {
 		"@anthropic-ai/sdk": "^0.82.0",
+		"@fontsource-variable/inter": "^5.2.8",
 		"@lucide/svelte": "^1.7.0",
 		"@tailwindcss/vite": "^4.2.2",
 		"clsx": "^2.1.1",
+		"shadcn-svelte": "^1.2.7",
 		"tailwind-merge": "^3.5.0",
 		"tailwind-variants": "^3.2.2",
 		"tailwindcss": "^4.2.2",

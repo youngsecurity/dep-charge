@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-04-04
+
+### Added
+- shadcn-svelte preset `b2W5XQjlI` with "mira" style and olive base color
+- Inter variable font (`@fontsource-variable/inter`)
+- `shadcn-svelte` runtime package for theme CSS
+- `<meta name="color-scheme" content="dark">` to prevent browser dark mode extensions from interfering
+
+### Changed
+- Updated `components.json` with preset config (mira style, olive base, bold menu accent)
+- Updated `layout.css` with preset theme tokens
+- Updated button component to mira style variant
+- Updated `src/lib/utils.ts` with `WithoutChild`, `WithoutChildren`, `WithoutChildrenOrChild` types
+
 ## [0.2.2] - 2026-04-04
 
 ### Changed
