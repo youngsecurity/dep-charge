@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-04-04
+
+### Added
+- shadcn-svelte component library with manual installation
+- Tailwind CSS 4 with `@tailwindcss/vite` plugin
+- shadcn-svelte dependencies: tailwind-variants, clsx, tailwind-merge, tw-animate-css
+- Lucide Svelte icon library (`@lucide/svelte`)
+- `cn()` class merge utility and `WithElementRef` type in `src/lib/utils.ts`
+- `src/routes/layout.css` with full shadcn-svelte theme tokens (light + dark via OKLCH)
+- `components.json` for shadcn-svelte CLI component installation
+- Button component (`src/lib/components/ui/button/`) as initial shadcn-svelte component
+
+### Changed
+- `vite.config.ts` — added Tailwind CSS Vite plugin before SvelteKit plugin
+- `+layout.svelte` — imports both `layout.css` (shadcn theme) and `app.css` (custom styles)
+
 ## [0.1.2] - 2026-04-04
 
 ### Added
