@@ -7,18 +7,24 @@
 	import ScoreDisplay from '$lib/components/ScoreDisplay.svelte';
 	import DependencyTable from '$lib/components/DependencyTable.svelte';
 
+	let { data } = $props();
+
 	let activeTab = $state<InputMethod>('upload');
 	let loading = $state(false);
 	let error = $state('');
 	let result = $state<AnalysisResult | null>(null);
 	let streamText = $state('');
 
-	const tabs: { id: InputMethod; label: string }[] = [
-		{ id: 'upload', label: 'Upload' },
-		{ id: 'paste', label: 'Paste' },
-		{ id: 'git-url', label: 'Git URL' },
-		{ id: 'local-path', label: 'Local Path' }
-	];
+	const tabs = $derived(
+		[
+			{ id: 'upload' as InputMethod, label: 'Upload' },
+			{ id: 'paste' as InputMethod, label: 'Paste' },
+			{ id: 'git-url' as InputMethod, label: 'Git URL' },
+			...(data.allowLocalPath
+				? [{ id: 'local-path' as InputMethod, label: 'Local Path' }]
+				: [])
+		]
+	);
 
 	async function analyze(fetchFn: () => Promise<Response>) {
 		loading = true;

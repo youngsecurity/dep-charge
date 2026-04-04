@@ -1,6 +1,7 @@
 import { anthropic } from '$lib/server/anthropic';
 import { systemPrompt, analysisSchema } from '$lib/server/prompt';
 import { fetchDependencyFile } from '$lib/server/fetcher';
+import { env } from '$env/dynamic/private';
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 
@@ -38,6 +39,9 @@ export const POST: RequestHandler = async ({ request }) => {
 				dependencyContent = result.content;
 				fileName = result.fileName;
 			} else if (body.method === 'local-path') {
+				if (env.ALLOW_LOCAL_PATH !== 'true') {
+					return json({ error: 'Local path access is disabled' }, { status: 403 });
+				}
 				if (!body.localPath?.trim()) {
 					return json({ error: 'No path provided' }, { status: 400 });
 				}

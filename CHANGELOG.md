@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-04-04
+
+### Changed
+- Local Path input method now gated behind `ALLOW_LOCAL_PATH=true` feature flag (disabled by default)
+- Local Path tab hidden from UI when flag is off
+- API returns 403 when local path access is attempted without the flag
+
 ## [0.1.0] - 2026-04-03
 
 ### Added
