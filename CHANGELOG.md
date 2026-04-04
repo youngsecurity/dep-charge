@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-04
+
+### Added
+- `LoadingState` component with spinner, elapsed time, and streaming character count
+- `ErrorBanner` component with retry and dismiss actions
+- `CLAUDE_MODEL` env var for configurable model selection (default: `claude-sonnet-4-6-20250514`)
+- `ALLOWED_LOCAL_DIRS` env var for restricting local path reads to specific directories
+- File upload validation against known dependency file names
+- File size pre-check before reading upload content into memory
+- Git URL strict format validation with 10-second fetch timeout
+- Path traversal rejection before path resolution
+- `bun.lock` added to recognized dependency files
+
+### Changed
+- Replaced inline loading UI with dedicated `LoadingState` component
+- Replaced inline error display with `ErrorBanner` component (supports retry and dismiss)
+- Deduplicated GitHub URL regex — single source in `fetcher.ts`, removed from API route
+- Extracted `contentTooLargeError()` helper to eliminate 3x duplicated formatting
+- Cached `getAllowedLocalDirs()` at module level instead of re-parsing per request
+- Moved `TextEncoder` to module-level singleton
+- ErrorBanner resets dismissed state when error message changes
+
+### Removed
+- Unused `analysisSchema` import from API route
+- Redundant paste-specific content length check (catch-all already handles it)
+
 ## [0.1.1] - 2026-04-04
 
 ### Changed

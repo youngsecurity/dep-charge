@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Language:** TypeScript
 - **Framework:** SvelteKit 2 + Svelte 5 (runes mode)
 - **AI:** Anthropic API via `@anthropic-ai/sdk` (Claude Sonnet for analysis)
-- **Environment:** Copy `env.example` to `.env.local` and set `ANTHROPIC_API_KEY`
+- **Environment:** Copy `env.example` to `.env.local` and set `ANTHROPIC_API_KEY`. Optionally set `CLAUDE_MODEL` to override the default model (`claude-sonnet-4-6-20250514`)
 
 ## Development Commands
 

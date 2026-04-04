@@ -6,6 +6,8 @@
 	import LocalPath from '$lib/components/LocalPath.svelte';
 	import ScoreDisplay from '$lib/components/ScoreDisplay.svelte';
 	import DependencyTable from '$lib/components/DependencyTable.svelte';
+	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
+	import LoadingState from '$lib/components/LoadingState.svelte';
 
 	let { data } = $props();
 
@@ -14,6 +16,7 @@
 	let error = $state('');
 	let result = $state<AnalysisResult | null>(null);
 	let streamText = $state('');
+	let lastFetchFn = $state<(() => Promise<Response>) | null>(null);
 
 	const tabs = $derived(
 		[
@@ -27,6 +30,7 @@
 	);
 
 	async function analyze(fetchFn: () => Promise<Response>) {
+		lastFetchFn = fetchFn;
 		loading = true;
 		error = '';
 		result = null;
@@ -36,37 +40,60 @@
 			const response = await fetchFn();
 
 			if (!response.ok) {
-				const data = await response.json();
-				throw new Error(data.error || 'Analysis failed');
+				let errorMessage = 'Analysis failed';
+				try {
+					const data = await response.json();
+					errorMessage = data.error || errorMessage;
+				} catch {
+					// Response body wasn't valid JSON; use default message
+				}
+				throw new Error(errorMessage);
 			}
 
 			const reader = response.body!.getReader();
 			const decoder = new TextDecoder();
 			let buffer = '';
 
-			while (true) {
-				const { done, value } = await reader.read();
-				if (done) break;
+			try {
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) break;
 
-				buffer += decoder.decode(value, { stream: true });
-				const lines = buffer.split('\n\n');
-				buffer = lines.pop() || '';
+					buffer += decoder.decode(value, { stream: true });
+					const lines = buffer.split('\n\n');
+					buffer = lines.pop() || '';
 
-				for (const line of lines) {
-					if (!line.startsWith('data: ')) continue;
-					const data = JSON.parse(line.slice(6));
+					for (const line of lines) {
+						if (!line.startsWith('data: ')) continue;
 
-					if (data.type === 'delta') {
-						streamText += data.text;
-					} else if (data.type === 'done') {
+						let data: { type: string; text?: string; error?: string };
 						try {
-							result = JSON.parse(streamText);
+							data = JSON.parse(line.slice(6));
 						} catch {
-							error = 'Failed to parse analysis result';
+							// Malformed SSE data; skip this chunk
+							continue;
 						}
-					} else if (data.type === 'error') {
-						error = data.error;
+
+						if (data.type === 'delta') {
+							streamText += data.text;
+						} else if (data.type === 'done') {
+							try {
+								result = JSON.parse(streamText);
+							} catch {
+								error = 'Failed to parse analysis result';
+							}
+						} else if (data.type === 'error') {
+							error = data.error ?? 'Analysis failed';
+						}
 					}
+				}
+			} catch (readErr) {
+				// Network disconnection or stream read failure
+				if (!error) {
+					error =
+						readErr instanceof Error
+							? `Connection lost: ${readErr.message}`
+							: 'Connection lost during analysis';
 				}
 			}
 
@@ -81,6 +108,12 @@
 			error = err instanceof Error ? err.message : 'Something went wrong';
 		} finally {
 			loading = false;
+		}
+	}
+
+	function retryLastAnalysis() {
+		if (lastFetchFn) {
+			analyze(lastFetchFn);
 		}
 	}
 
@@ -154,19 +187,11 @@
 	</section>
 
 	{#if loading}
-		<section class="loading-section">
-			<div class="spinner"></div>
-			<p>Analyzing dependencies...</p>
-			{#if streamText.length > 0}
-				<p class="stream-progress">{streamText.length.toLocaleString()} characters received</p>
-			{/if}
-		</section>
+		<LoadingState streamLength={streamText.length} />
 	{/if}
 
 	{#if error}
-		<section class="error-section">
-			<p>{error}</p>
-		</section>
+		<ErrorBanner message={error} onretry={lastFetchFn ? retryLastAnalysis : undefined} />
 	{/if}
 
 	{#if result}
@@ -243,37 +268,6 @@
 	}
 	.tab-content {
 		padding: 1.5rem;
-	}
-
-	.loading-section {
-		text-align: center;
-		padding: 3rem 1rem;
-	}
-	.spinner {
-		width: 40px;
-		height: 40px;
-		border: 3px solid var(--color-border);
-		border-top-color: var(--color-accent);
-		border-radius: 50%;
-		margin: 0 auto 1rem;
-		animation: spin 0.8s linear infinite;
-	}
-	@keyframes spin {
-		to { transform: rotate(360deg); }
-	}
-	.stream-progress {
-		color: var(--color-text-muted);
-		font-size: 0.875rem;
-		margin-top: 0.5rem;
-	}
-
-	.error-section {
-		margin-top: 1.5rem;
-		padding: 1rem;
-		background: color-mix(in srgb, var(--color-critical) 10%, var(--color-surface));
-		border: 1px solid var(--color-critical);
-		border-radius: var(--radius);
-		color: var(--color-critical);
 	}
 
 	.results-section {
