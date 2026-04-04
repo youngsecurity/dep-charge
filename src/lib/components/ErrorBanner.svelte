@@ -44,9 +44,9 @@
 		gap: 0.75rem;
 		margin-top: 1.5rem;
 		padding: 1rem 1.25rem;
-		background: color-mix(in srgb, var(--color-critical) 10%, var(--color-surface));
+		background: color-mix(in srgb, var(--color-critical) 10%, var(--card));
 		border: 1px solid var(--color-critical);
-		border-radius: var(--radius);
+		border-radius: var(--radius-lg);
 		color: var(--color-critical);
 	}
 
@@ -83,7 +83,7 @@
 		background: var(--color-critical);
 		color: white;
 		border: none;
-		border-radius: var(--radius);
+		border-radius: var(--radius-lg);
 		font-size: 0.85rem;
 		font-weight: 600;
 		transition: background 0.2s;

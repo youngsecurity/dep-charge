@@ -48,27 +48,27 @@
 
 <style>
 	.dropzone {
-		border: 2px dashed var(--color-border);
-		border-radius: var(--radius);
+		border: 2px dashed var(--border);
+		border-radius: var(--radius-lg);
 		padding: 2rem;
 		text-align: center;
 		transition: border-color 0.2s, background 0.2s;
 	}
 	.dropzone:hover,
 	.drag-over {
-		border-color: var(--color-accent);
-		background: var(--color-surface-hover);
+		border-color: var(--primary);
+		background: var(--accent);
 	}
 	.file-name {
 		font-weight: 600;
 		font-family: var(--font-mono);
 	}
 	.file-size {
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.875rem;
 	}
 	.hint {
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		margin-top: 0.25rem;
 	}
@@ -76,29 +76,29 @@
 		display: inline-block;
 		margin-top: 1rem;
 		padding: 0.5rem 1rem;
-		background: var(--color-surface-hover);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
-		color: var(--color-text);
+		background: var(--accent);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		color: var(--foreground);
 		cursor: pointer;
 		transition: background 0.2s;
 	}
 	.browse-btn:hover {
-		background: var(--color-accent);
+		background: var(--primary);
 	}
 	.submit-btn {
 		margin-top: 1rem;
 		width: 100%;
 		padding: 0.75rem;
-		background: var(--color-accent);
+		background: var(--primary);
 		color: white;
 		border: none;
-		border-radius: var(--radius);
+		border-radius: var(--radius-lg);
 		font-size: 1rem;
 		font-weight: 600;
 		transition: background 0.2s;
 	}
 	.submit-btn:hover {
-		background: var(--color-accent-hover);
+		background: color-mix(in srgb, var(--primary) 80%, white);
 	}
 </style>

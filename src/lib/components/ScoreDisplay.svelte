@@ -31,7 +31,7 @@
 <div class="score-section">
 	<div class="score-ring">
 		<svg viewBox="0 0 120 120" width="160" height="160">
-			<circle cx="60" cy="60" r="54" fill="none" stroke="var(--color-border)" stroke-width="8" />
+			<circle cx="60" cy="60" r="54" fill="none" stroke="var(--border)" stroke-width="8" />
 			<circle
 				cx="60"
 				cy="60"
@@ -115,8 +115,8 @@
 		font-weight: 700;
 	}
 	.ecosystem-badge {
-		background: var(--color-surface-hover);
-		border: 1px solid var(--color-border);
+		background: var(--accent);
+		border: 1px solid var(--border);
 		padding: 0.25rem 0.75rem;
 		border-radius: 999px;
 		font-size: 0.8rem;
@@ -125,7 +125,7 @@
 		letter-spacing: 0.05em;
 	}
 	.dep-count {
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.875rem;
 	}
 	.risk-bars {
@@ -133,9 +133,9 @@
 		grid-template-columns: repeat(4, 1fr);
 		gap: 0.75rem;
 		padding: 1rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 		margin-top: 1rem;
 	}
 	.risk-bar-row {
@@ -146,7 +146,7 @@
 	}
 	.risk-bar-label {
 		font-size: 0.75rem;
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 	}
@@ -157,9 +157,9 @@
 	.explanation {
 		margin-top: 1.5rem;
 		padding: 1rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 		line-height: 1.7;
 	}
 </style>

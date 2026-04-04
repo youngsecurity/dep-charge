@@ -19,10 +19,10 @@
 	textarea {
 		width: 100%;
 		padding: 1rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
-		color: var(--color-text);
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		color: var(--foreground);
 		font-family: var(--font-mono);
 		font-size: 0.875rem;
 		resize: vertical;
@@ -30,7 +30,7 @@
 	}
 	textarea:focus {
 		outline: none;
-		border-color: var(--color-accent);
+		border-color: var(--primary);
 	}
 	.footer {
 		display: flex;
@@ -39,21 +39,21 @@
 		margin-top: 0.75rem;
 	}
 	.char-count {
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.875rem;
 	}
 	.submit-btn {
 		padding: 0.75rem 2rem;
-		background: var(--color-accent);
+		background: var(--primary);
 		color: white;
 		border: none;
-		border-radius: var(--radius);
+		border-radius: var(--radius-lg);
 		font-size: 1rem;
 		font-weight: 600;
 		transition: background 0.2s;
 	}
 	.submit-btn:hover:not(:disabled) {
-		background: var(--color-accent-hover);
+		background: color-mix(in srgb, var(--primary) 80%, white);
 	}
 	.submit-btn:disabled {
 		opacity: 0.5;

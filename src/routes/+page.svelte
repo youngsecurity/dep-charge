@@ -234,37 +234,37 @@
 		letter-spacing: -0.02em;
 	}
 	.tagline {
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		margin-top: 0.25rem;
 	}
 	.input-section {
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 		overflow: hidden;
 	}
 	.tabs {
 		display: flex;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--border);
 	}
 	.tab {
 		flex: 1;
 		padding: 0.75rem 1rem;
 		background: none;
 		border: none;
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.9rem;
 		font-weight: 500;
 		transition: all 0.2s;
 		border-bottom: 2px solid transparent;
 	}
 	.tab:hover {
-		color: var(--color-text);
-		background: var(--color-surface-hover);
+		color: var(--foreground);
+		background: var(--accent);
 	}
 	.tab.active {
-		color: var(--color-accent);
-		border-bottom-color: var(--color-accent);
+		color: var(--primary);
+		border-bottom-color: var(--primary);
 	}
 	.tab-content {
 		padding: 1.5rem;
@@ -293,9 +293,9 @@
 	}
 	.recommendations li {
 		padding: 0.6rem 1rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 		margin-bottom: 0.5rem;
 		font-size: 0.9rem;
 		line-height: 1.5;

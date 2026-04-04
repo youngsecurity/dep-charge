@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-04-04
+
+### Changed
+- Migrated all components from old custom CSS properties to shadcn-svelte theme tokens
+- Slimmed `src/app.css` to only risk-specific colors (`--color-low/medium/high/critical`) and `--font-mono`
+- Added `class="dark"` to `<html>` in `app.html` to activate shadcn dark theme
+- Removed old global resets (shadcn's base layer handles them)
+
 ## [0.2.1] - 2026-04-04
 
 ### Added

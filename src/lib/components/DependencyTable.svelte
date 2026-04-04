@@ -98,7 +98,7 @@
 		gap: 0.5rem;
 	}
 	.count {
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.875rem;
 	}
 	.filters {
@@ -107,24 +107,24 @@
 	}
 	.filter-btn {
 		padding: 0.25rem 0.75rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
+		background: var(--card);
+		border: 1px solid var(--border);
 		border-radius: 999px;
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		font-size: 0.75rem;
 		text-transform: uppercase;
 		letter-spacing: 0.03em;
 		transition: all 0.2s;
 	}
 	.filter-btn.active {
-		background: var(--color-accent);
-		border-color: var(--color-accent);
+		background: var(--primary);
+		border-color: var(--primary);
 		color: white;
 	}
 	.table-wrapper {
 		overflow-x: auto;
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 	}
 	table {
 		width: 100%;
@@ -133,12 +133,12 @@
 	th {
 		text-align: left;
 		padding: 0.75rem 1rem;
-		background: var(--color-surface);
-		color: var(--color-text-muted);
+		background: var(--card);
+		color: var(--muted-foreground);
 		font-size: 0.75rem;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--border);
 		white-space: nowrap;
 	}
 	th.sortable {
@@ -146,18 +146,18 @@
 		user-select: none;
 	}
 	th.sortable:hover {
-		color: var(--color-text);
+		color: var(--foreground);
 	}
 	td {
 		padding: 0.6rem 1rem;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--border);
 		font-size: 0.875rem;
 	}
 	tr:last-child td {
 		border-bottom: none;
 	}
 	tr:hover td {
-		background: var(--color-surface-hover);
+		background: var(--accent);
 	}
 	.dep-name {
 		font-family: var(--font-mono);
@@ -166,7 +166,7 @@
 	}
 	.dep-version {
 		font-family: var(--font-mono);
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 		white-space: nowrap;
 	}
 	.dep-score {
@@ -185,6 +185,6 @@
 	}
 	.dep-rationale {
 		max-width: 400px;
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 	}
 </style>

@@ -34,7 +34,7 @@
 				cy="25"
 				r="20"
 				fill="none"
-				stroke="var(--color-border)"
+				stroke="var(--border)"
 				stroke-width="4"
 			/>
 			<circle
@@ -43,7 +43,7 @@
 				cy="25"
 				r="20"
 				fill="none"
-				stroke="var(--color-accent)"
+				stroke="var(--primary)"
 				stroke-width="4"
 				stroke-linecap="round"
 				stroke-dasharray="80, 200"
@@ -82,9 +82,9 @@
 		gap: 1rem;
 		padding: 3rem 1rem;
 		margin-top: 1.5rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius);
+		background: var(--card);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
 	}
 
 	.spinner-container {
@@ -124,7 +124,7 @@
 	.loading-label {
 		font-size: 1.1rem;
 		font-weight: 600;
-		color: var(--color-text);
+		color: var(--foreground);
 	}
 
 	.dots::after {
@@ -156,7 +156,7 @@
 		gap: 0.5rem;
 		font-family: var(--font-mono);
 		font-size: 0.85rem;
-		color: var(--color-text-muted);
+		color: var(--muted-foreground);
 	}
 
 	.meta-item {
@@ -176,7 +176,7 @@
 	.progress-bar-track {
 		width: 200px;
 		height: 3px;
-		background: var(--color-border);
+		background: var(--border);
 		border-radius: 2px;
 		overflow: hidden;
 		margin-top: 0.25rem;
@@ -184,7 +184,7 @@
 
 	.progress-bar-fill {
 		height: 100%;
-		background: var(--color-accent);
+		background: var(--primary);
 		border-radius: 2px;
 		animation: indeterminate 1.5s ease-in-out infinite;
 	}
