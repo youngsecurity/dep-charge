@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-04-04
+
+### Added
+- Vitest test runner configured in `vite.config.ts`
+- `test` and `test:watch` scripts in `package.json`
+- Unit tests for GitHub fetcher: URL validation, DEPENDENCY_FILES list, AbortSignal timeout support, branch fallback (13 tests)
+- Unit tests for API route input validation: file upload, paste, git URL, local path, size limits, SSE streaming, model config (35 tests)
+
 ## [0.2.0] - 2026-04-04
 
 ### Added
