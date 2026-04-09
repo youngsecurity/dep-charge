@@ -1,42 +1,61 @@
-# sv
+# dep-charge
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A tool that analyzes all the dependencies in a project and gives a rating from 1 to 10 on how likely it is to get breached.
 
-## Creating a project
+Built with SvelteKit + Bun, powered by Claude for ecosystem-agnostic dependency analysis. Submit a lock or manifest file via upload, paste, Git URL, or local path, and dep-charge streams back a breach-likelihood score, a per-dependency breakdown, and remediation recommendations.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Tech stack
+
+- **Runtime:** [Bun](https://bun.sh)
+- **Framework:** SvelteKit 2 + Svelte 5 (runes mode)
+- **Language:** TypeScript
+- **AI:** Anthropic Claude via `@anthropic-ai/sdk`
+
+## Getting started
+
+Copy the example environment file and set your Anthropic API key:
 
 ```sh
-# create a new project
-npx sv create my-app
+cp env.example .env.local
+# then edit .env.local and set ANTHROPIC_API_KEY
 ```
 
-To recreate this project with the same configuration:
+Optionally set `CLAUDE_MODEL` to override the default model.
+
+Install dependencies:
 
 ```sh
-# recreate this project
-npx sv@0.14.0 create --template minimal --types ts --no-install .
+bun install
 ```
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Start a development server on port 3000:
 
 ```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+bun run dev
 ```
 
 ## Building
 
-To create a production version of your app:
+Create a production build:
 
 ```sh
-npm run build
+bun run build
 ```
 
-You can preview the production build with `npm run preview`.
+Preview the production build:
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```sh
+bun run preview
+```
+
+Run TypeScript type checking:
+
+```sh
+bun run check
+```
+
+## License
+
+MIT — owned by Young Security.
