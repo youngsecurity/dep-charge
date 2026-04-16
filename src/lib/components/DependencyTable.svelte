@@ -1,5 +1,10 @@
 <script lang="ts">
 	import type { DependencyRisk } from '$lib/types';
+	import { riskLevelColor } from '$lib/utils';
+	import * as Table from '$lib/components/ui/table';
+	import * as Card from '$lib/components/ui/card';
+	import { Badge } from '$lib/components/ui/badge';
+	import { Button } from '$lib/components/ui/button';
 
 	let { dependencies }: { dependencies: DependencyRisk[] } = $props();
 
@@ -30,161 +35,51 @@
 		}
 	}
 
-	function levelColor(level: string) {
-		switch (level) {
-			case 'critical': return 'var(--color-critical)';
-			case 'high': return 'var(--color-high)';
-			case 'medium': return 'var(--color-medium)';
-			default: return 'var(--color-low)';
-		}
-	}
 </script>
 
-<div class="table-controls">
-	<span class="count">{filtered.length} of {dependencies.length} dependencies</span>
-	<div class="filters">
+<div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+	<span class="text-sm text-muted-foreground">{filtered.length} of {dependencies.length} dependencies</span>
+	<div class="flex gap-1">
 		{#each ['all', 'critical', 'high', 'medium', 'low'] as level}
-			<button
-				class="filter-btn"
-				class:active={filterLevel === level}
+			<Button
+				variant={filterLevel === level ? 'default' : 'outline'}
+				size="xs"
 				onclick={() => (filterLevel = level)}
+				aria-pressed={filterLevel === level}
 			>
 				{level}
-			</button>
+			</Button>
 		{/each}
 	</div>
 </div>
 
-<div class="table-wrapper">
-	<table>
-		<thead>
-			<tr>
-				<th class="sortable" onclick={() => toggleSort('name')}>
+<Card.Root>
+	<Table.Root>
+		<Table.Header>
+			<Table.Row>
+				<Table.Head class="cursor-pointer select-none" onclick={() => toggleSort('name')}>
 					Name {sortBy === 'name' ? (sortAsc ? '↑' : '↓') : ''}
-				</th>
-				<th>Version</th>
-				<th class="sortable" onclick={() => toggleSort('risk_score')}>
+				</Table.Head>
+				<Table.Head>Version</Table.Head>
+				<Table.Head class="cursor-pointer select-none" onclick={() => toggleSort('risk_score')}>
 					Score {sortBy === 'risk_score' ? (sortAsc ? '↑' : '↓') : ''}
-				</th>
-				<th>Level</th>
-				<th>Rationale</th>
-			</tr>
-		</thead>
-		<tbody>
+				</Table.Head>
+				<Table.Head>Level</Table.Head>
+				<Table.Head>Rationale</Table.Head>
+			</Table.Row>
+		</Table.Header>
+		<Table.Body>
 			{#each sorted as dep}
-				<tr>
-					<td class="dep-name">{dep.name}</td>
-					<td class="dep-version">{dep.version}</td>
-					<td class="dep-score" style="color: {levelColor(dep.risk_level)}">{dep.risk_score}</td>
-					<td>
-						<span class="level-badge" style="color: {levelColor(dep.risk_level)}; border-color: {levelColor(dep.risk_level)}">
-							{dep.risk_level}
-						</span>
-					</td>
-					<td class="dep-rationale">{dep.rationale}</td>
-				</tr>
+				<Table.Row>
+					<Table.Cell class="font-mono font-medium whitespace-nowrap">{dep.name}</Table.Cell>
+					<Table.Cell class="font-mono text-muted-foreground whitespace-nowrap">{dep.version}</Table.Cell>
+					<Table.Cell class="text-center font-bold" style="color: {riskLevelColor(dep.risk_level)}">{dep.risk_score}</Table.Cell>
+					<Table.Cell>
+						<Badge variant="outline" class="text-xs uppercase" style="color: {riskLevelColor(dep.risk_level)}; border-color: {riskLevelColor(dep.risk_level)}">{dep.risk_level}</Badge>
+					</Table.Cell>
+					<Table.Cell class="max-w-sm text-muted-foreground">{dep.rationale}</Table.Cell>
+				</Table.Row>
 			{/each}
-		</tbody>
-	</table>
-</div>
-
-<style>
-	.table-controls {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.75rem;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-	.count {
-		color: var(--muted-foreground);
-		font-size: 0.875rem;
-	}
-	.filters {
-		display: flex;
-		gap: 0.25rem;
-	}
-	.filter-btn {
-		padding: 0.25rem 0.75rem;
-		background: var(--card);
-		border: 1px solid var(--border);
-		border-radius: 999px;
-		color: var(--muted-foreground);
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.03em;
-		transition: all 0.2s;
-	}
-	.filter-btn.active {
-		background: var(--primary);
-		border-color: var(--primary);
-		color: white;
-	}
-	.table-wrapper {
-		overflow-x: auto;
-		border: 1px solid var(--border);
-		border-radius: var(--radius-lg);
-	}
-	table {
-		width: 100%;
-		border-collapse: collapse;
-	}
-	th {
-		text-align: left;
-		padding: 0.75rem 1rem;
-		background: var(--card);
-		color: var(--muted-foreground);
-		font-size: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		border-bottom: 1px solid var(--border);
-		white-space: nowrap;
-	}
-	th.sortable {
-		cursor: pointer;
-		user-select: none;
-	}
-	th.sortable:hover {
-		color: var(--foreground);
-	}
-	td {
-		padding: 0.6rem 1rem;
-		border-bottom: 1px solid var(--border);
-		font-size: 0.875rem;
-	}
-	tr:last-child td {
-		border-bottom: none;
-	}
-	tr:hover td {
-		background: var(--accent);
-	}
-	.dep-name {
-		font-family: var(--font-mono);
-		font-weight: 500;
-		white-space: nowrap;
-	}
-	.dep-version {
-		font-family: var(--font-mono);
-		color: var(--muted-foreground);
-		white-space: nowrap;
-	}
-	.dep-score {
-		font-weight: 700;
-		text-align: center;
-	}
-	.level-badge {
-		display: inline-block;
-		padding: 0.15rem 0.5rem;
-		border: 1px solid;
-		border-radius: 999px;
-		font-size: 0.7rem;
-		text-transform: uppercase;
-		letter-spacing: 0.03em;
-		white-space: nowrap;
-	}
-	.dep-rationale {
-		max-width: 400px;
-		color: var(--muted-foreground);
-	}
-</style>
+		</Table.Body>
+	</Table.Root>
+</Card.Root>

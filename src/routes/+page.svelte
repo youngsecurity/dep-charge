@@ -8,6 +8,8 @@
 	import DependencyTable from '$lib/components/DependencyTable.svelte';
 	import ErrorBanner from '$lib/components/ErrorBanner.svelte';
 	import LoadingState from '$lib/components/LoadingState.svelte';
+	import * as Tabs from '$lib/components/ui/tabs';
+	import * as Card from '$lib/components/ui/card';
 
 	let { data } = $props();
 
@@ -42,15 +44,16 @@
 			if (!response.ok) {
 				let errorMessage = 'Analysis failed';
 				try {
-					const data = await response.json();
-					errorMessage = data.error || errorMessage;
+					const errorBody = await response.json();
+					errorMessage = errorBody.error || errorMessage;
 				} catch {
 					// Response body wasn't valid JSON; use default message
 				}
 				throw new Error(errorMessage);
 			}
 
-			const reader = response.body!.getReader();
+			if (!response.body) throw new Error('No response body');
+			const reader = response.body.getReader();
 			const decoder = new TextDecoder();
 			let buffer = '';
 
@@ -66,24 +69,23 @@
 					for (const line of lines) {
 						if (!line.startsWith('data: ')) continue;
 
-						let data: { type: string; text?: string; error?: string };
+						let sseEvent: { type: string; text?: string; error?: string };
 						try {
-							data = JSON.parse(line.slice(6));
+							sseEvent = JSON.parse(line.slice(6));
 						} catch {
-							// Malformed SSE data; skip this chunk
 							continue;
 						}
 
-						if (data.type === 'delta') {
-							streamText += data.text;
-						} else if (data.type === 'done') {
+						if (sseEvent.type === 'delta') {
+							streamText += sseEvent.text;
+						} else if (sseEvent.type === 'done') {
 							try {
 								result = JSON.parse(streamText);
 							} catch {
 								error = 'Failed to parse analysis result';
 							}
-						} else if (data.type === 'error') {
-							error = data.error ?? 'Analysis failed';
+						} else if (sseEvent.type === 'error') {
+							error = sseEvent.error ?? 'Analysis failed';
 						}
 					}
 				}
@@ -123,181 +125,87 @@
 		analyze(() => fetch('/api/analyze', { method: 'POST', body: formData }));
 	}
 
-	function handlePaste(content: string) {
+	function handleJson(body: Record<string, string>) {
 		analyze(() =>
 			fetch('/api/analyze', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ method: 'paste', content })
-			})
-		);
-	}
-
-	function handleGitUrl(gitUrl: string) {
-		analyze(() =>
-			fetch('/api/analyze', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ method: 'git-url', gitUrl })
-			})
-		);
-	}
-
-	function handleLocalPath(localPath: string) {
-		analyze(() =>
-			fetch('/api/analyze', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ method: 'local-path', localPath })
+				body: JSON.stringify(body)
 			})
 		);
 	}
 </script>
 
-<div class="container">
-	<header>
-		<h1>dep-charge</h1>
-		<p class="tagline">Dependency security analysis powered by AI</p>
-	</header>
+<div class="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+	<div class="mb-8 text-center">
+		<h1 class="text-4xl font-extrabold tracking-tight">dep-charge</h1>
+		<p class="mt-1 text-muted-foreground">Dependency security analysis powered by AI</p>
+	</div>
 
-	<section class="input-section">
-		<nav class="tabs">
-			{#each tabs as tab}
-				<button
-					class="tab"
-					class:active={activeTab === tab.id}
-					onclick={() => (activeTab = tab.id)}
-				>
-					{tab.label}
-				</button>
-			{/each}
-		</nav>
-
-		<div class="tab-content">
-			{#if activeTab === 'upload'}
-				<FileUpload onsubmit={handleFileUpload} />
-			{:else if activeTab === 'paste'}
-				<PasteText onsubmit={handlePaste} />
-			{:else if activeTab === 'git-url'}
-				<GitRepoUrl onsubmit={handleGitUrl} />
-			{:else if activeTab === 'local-path'}
-				<LocalPath onsubmit={handleLocalPath} />
-			{/if}
-		</div>
-	</section>
+	<Card.Root>
+		<Card.Content class="p-0">
+			<Tabs.Root bind:value={activeTab}>
+				<Tabs.List class="w-full">
+					{#each tabs as tab}
+						<Tabs.Trigger value={tab.id} class="flex-1">{tab.label}</Tabs.Trigger>
+					{/each}
+				</Tabs.List>
+				<div class="p-6">
+					<Tabs.Content value="upload">
+						<FileUpload onsubmit={handleFileUpload} />
+					</Tabs.Content>
+					<Tabs.Content value="paste">
+						<PasteText onsubmit={(content) => handleJson({ method: 'paste', content })} />
+					</Tabs.Content>
+					<Tabs.Content value="git-url">
+						<GitRepoUrl onsubmit={(gitUrl) => handleJson({ method: 'git-url', gitUrl })} />
+					</Tabs.Content>
+					{#if data.allowLocalPath}
+						<Tabs.Content value="local-path">
+							<LocalPath onsubmit={(localPath) => handleJson({ method: 'local-path', localPath })} />
+						</Tabs.Content>
+					{/if}
+				</div>
+			</Tabs.Root>
+		</Card.Content>
+	</Card.Root>
 
 	{#if loading}
-		<LoadingState streamLength={streamText.length} />
+		<div class="mt-6">
+			<LoadingState streamLength={streamText.length} />
+		</div>
 	{/if}
 
 	{#if error}
-		<ErrorBanner message={error} onretry={lastFetchFn ? retryLastAnalysis : undefined} />
+		<div class="mt-6">
+			<ErrorBanner message={error} onretry={lastFetchFn ? retryLastAnalysis : undefined} />
+		</div>
 	{/if}
 
 	{#if result}
-		<section class="results-section">
-			<h2>Analysis Results</h2>
+		<div class="mt-8 space-y-6">
+			<h2 class="text-2xl font-bold">Analysis Results</h2>
 			<ScoreDisplay {result} />
 
 			{#if result.dependencies.length > 0}
-				<h3>Dependency Breakdown</h3>
-				<DependencyTable dependencies={result.dependencies} />
+				<div>
+					<h3 class="mb-3 text-lg font-semibold">Dependency Breakdown</h3>
+					<DependencyTable dependencies={result.dependencies} />
+				</div>
 			{/if}
 
 			{#if result.recommendations.length > 0}
-				<div class="recommendations">
-					<h3>Recommendations</h3>
-					<ul>
+				<div>
+					<h3 class="mb-3 text-lg font-semibold">Recommendations</h3>
+					<div class="space-y-2">
 						{#each result.recommendations as rec}
-							<li>{rec}</li>
+							<Card.Root>
+								<Card.Content class="text-sm">{rec}</Card.Content>
+							</Card.Root>
 						{/each}
-					</ul>
+					</div>
 				</div>
 			{/if}
-		</section>
+		</div>
 	{/if}
 </div>
-
-<style>
-	.container {
-		max-width: 900px;
-		margin: 0 auto;
-		padding: 2rem 1.5rem 4rem;
-	}
-	header {
-		text-align: center;
-		margin-bottom: 2.5rem;
-	}
-	h1 {
-		font-size: 2.5rem;
-		font-weight: 800;
-		letter-spacing: -0.02em;
-	}
-	.tagline {
-		color: var(--muted-foreground);
-		margin-top: 0.25rem;
-	}
-	.input-section {
-		background: var(--card);
-		border: 1px solid var(--border);
-		border-radius: var(--radius-lg);
-		overflow: hidden;
-	}
-	.tabs {
-		display: flex;
-		border-bottom: 1px solid var(--border);
-	}
-	.tab {
-		flex: 1;
-		padding: 0.75rem 1rem;
-		background: none;
-		border: none;
-		color: var(--muted-foreground);
-		font-size: 0.9rem;
-		font-weight: 500;
-		transition: all 0.2s;
-		border-bottom: 2px solid transparent;
-	}
-	.tab:hover {
-		color: var(--foreground);
-		background: var(--accent);
-	}
-	.tab.active {
-		color: var(--primary);
-		border-bottom-color: var(--primary);
-	}
-	.tab-content {
-		padding: 1.5rem;
-	}
-
-	.results-section {
-		margin-top: 2rem;
-	}
-	h2 {
-		font-size: 1.5rem;
-		font-weight: 700;
-		margin-bottom: 0.5rem;
-	}
-	h3 {
-		font-size: 1.1rem;
-		font-weight: 600;
-		margin-top: 2rem;
-		margin-bottom: 0.75rem;
-	}
-	.recommendations {
-		margin-top: 2rem;
-	}
-	.recommendations ul {
-		list-style: none;
-		padding: 0;
-	}
-	.recommendations li {
-		padding: 0.6rem 1rem;
-		background: var(--card);
-		border: 1px solid var(--border);
-		border-radius: var(--radius-lg);
-		margin-bottom: 0.5rem;
-		font-size: 0.9rem;
-		line-height: 1.5;
-	}
-</style>

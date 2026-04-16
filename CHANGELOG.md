@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-16
+
+### Added
+- shadcn-svelte components: Alert, Badge, Card, Input, Table, Tabs, Textarea (joining existing Button)
+- `riskLevelColor()` utility in `$lib/utils.ts` — single source of truth for risk-level to CSS variable mapping
+- `scoreToRiskLevel()` utility for mapping numeric scores to risk categories
+- Accessibility attributes: `aria-label` on all inputs/textarea, `aria-pressed` on filter buttons, `role="img"` + label on SVG score gauge, `role="region"` on file drop zone
+
+### Changed
+- Complete UI redesign using shadcn-svelte components with Tailwind utility classes (no scoped `<style>` blocks)
+- All 9 components rewritten: `+page.svelte`, `FileUpload`, `PasteText`, `GitRepoUrl`, `LocalPath`, `ScoreDisplay`, `DependencyTable`, `ErrorBanner`, `LoadingState`
+- Collapsed 3 JSON fetch handlers into single `handleJson()` in `+page.svelte`
+- Deduplicated risk color mapping — removed duplicate logic from ScoreDisplay and DependencyTable
+- Replaced `response.body!` non-null assertion with null-safety check
+- Renamed shadowed `data` variables in `analyze()` to `errorBody` and `sseEvent`
+- LoadingState `intervalId` scoped inside `$effect`
+
+### Removed
+- Custom scoped CSS blocks across all migrated components (−647 net lines)
+- Unnecessary WHAT comments from ScoreDisplay, DependencyTable, LoadingState
+- No-op `onclick` handler on FileUpload Browse button
+- Misleading `role="button"` / `tabindex="0"` on FileUpload drop zone
+
 ## [0.2.3] - 2026-04-04
 
 ### Added

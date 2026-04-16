@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+
 	let { onsubmit }: { onsubmit: (file: File) => void } = $props();
 	let file = $state<File | null>(null);
 	let dragOver = $state(false);
@@ -21,84 +23,26 @@
 </script>
 
 <div
-	class="dropzone"
-	class:drag-over={dragOver}
+	class="flex flex-col items-center gap-3 rounded-lg border-2 border-dashed border-border p-8 text-center transition-colors hover:border-primary {dragOver ? 'border-primary bg-accent/50' : ''}"
 	ondragover={(e) => { e.preventDefault(); dragOver = true; }}
 	ondragleave={() => (dragOver = false)}
 	ondrop={handleDrop}
-	role="button"
-	tabindex="0"
+	role="region"
+	aria-label="File drop zone"
 >
 	{#if file}
-		<p class="file-name">{file.name}</p>
-		<p class="file-size">{(file.size / 1024).toFixed(1)} KB</p>
+		<p class="font-mono font-semibold">{file.name}</p>
+		<p class="text-sm text-muted-foreground">{(file.size / 1024).toFixed(1)} KB</p>
 	{:else}
 		<p>Drop a dependency file here</p>
-		<p class="hint">package-lock.json, requirements.txt, Cargo.lock, go.sum, etc.</p>
+		<p class="text-sm text-muted-foreground">package-lock.json, requirements.txt, Cargo.lock, go.sum, etc.</p>
 	{/if}
-	<label class="browse-btn">
-		Browse files
+	<label>
+		<Button variant="outline" class="cursor-pointer">Browse files</Button>
 		<input type="file" onchange={handleSelect} hidden />
 	</label>
 </div>
 
 {#if file}
-	<button class="submit-btn" onclick={submit}>Analyze</button>
+	<Button class="mt-4 w-full" onclick={submit}>Analyze</Button>
 {/if}
-
-<style>
-	.dropzone {
-		border: 2px dashed var(--border);
-		border-radius: var(--radius-lg);
-		padding: 2rem;
-		text-align: center;
-		transition: border-color 0.2s, background 0.2s;
-	}
-	.dropzone:hover,
-	.drag-over {
-		border-color: var(--primary);
-		background: var(--accent);
-	}
-	.file-name {
-		font-weight: 600;
-		font-family: var(--font-mono);
-	}
-	.file-size {
-		color: var(--muted-foreground);
-		font-size: 0.875rem;
-	}
-	.hint {
-		color: var(--muted-foreground);
-		font-size: 0.875rem;
-		margin-top: 0.25rem;
-	}
-	.browse-btn {
-		display: inline-block;
-		margin-top: 1rem;
-		padding: 0.5rem 1rem;
-		background: var(--accent);
-		border: 1px solid var(--border);
-		border-radius: var(--radius-lg);
-		color: var(--foreground);
-		cursor: pointer;
-		transition: background 0.2s;
-	}
-	.browse-btn:hover {
-		background: var(--primary);
-	}
-	.submit-btn {
-		margin-top: 1rem;
-		width: 100%;
-		padding: 0.75rem;
-		background: var(--primary);
-		color: white;
-		border: none;
-		border-radius: var(--radius-lg);
-		font-size: 1rem;
-		font-weight: 600;
-		transition: background 0.2s;
-	}
-	.submit-btn:hover {
-		background: color-mix(in srgb, var(--primary) 80%, white);
-	}
-</style>
